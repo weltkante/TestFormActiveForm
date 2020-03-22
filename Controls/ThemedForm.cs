@@ -6,6 +6,7 @@
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Windows.Forms;
+    using System.Diagnostics;
 
     // using NativeInterface;
     public class ThemedForm : /*Custom*/Form
@@ -15,6 +16,8 @@
         private bool closeHover = false;
         private bool helpHover = false;
         private bool active = false;
+        private string _name;
+        private Timer _timer;
 
         internal ThemedForm()
         {
@@ -29,6 +32,25 @@
             this.MouseMove += this.ThemedForm_MouseMove;
             this.Activated += this.ThemedForm_Activated;
             this.Deactivate += this.ThemedForm_Deactivate;
+
+            _name = "Form #" + Application.OpenForms.Count;
+            _timer = new Timer();
+            _timer.Tick += T_Tick;
+            _timer.Interval = 1000;
+            _timer.Start();
+        }
+
+        private void T_Tick(object sender, EventArgs e)
+        {
+            var form = Form.ActiveForm;
+            var name = (form as ThemedForm)?._name ?? form?.Name ?? "<null>";
+            Debug.WriteLine("ActiveForm=" + name);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _timer?.Dispose();
+            base.Dispose(disposing);
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -237,10 +259,16 @@
         }
 
         private void ThemedForm_Activated(object sender, EventArgs e)
-            => this.active = true;
+        {
+            Debug.WriteLine("Activated");
+            this.active = true;
+        }
 
         private void ThemedForm_Deactivate(object sender, EventArgs e)
-            => this.active = false;
+        {
+            Debug.WriteLine("Deactivated");
+            this.active = false;
+        }
 
         private void InitializeComponent()
         {

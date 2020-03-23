@@ -266,12 +266,14 @@
         {
             Debug.WriteLine("Activated");
             this.active = true;
+            Invalidate();
         }
 
         private void ThemedForm_Deactivate(object sender, EventArgs e)
         {
             Debug.WriteLine("Deactivated");
             this.active = false;
+            Invalidate();
         }
 
         private void InitializeComponent()

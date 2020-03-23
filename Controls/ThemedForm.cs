@@ -99,6 +99,10 @@
 
         private void ThemedForm_Paint(object sender, PaintEventArgs e)
         {
+            var form = Form.ActiveForm;
+            var name = (form as ThemedForm)?._name ?? form?.Name ?? "<null>";
+            Debug.WriteLine("Paint=" + _name + " ActiveForm=" + name);
+
             var fillRect = new Rectangle(1, 1, this.Size.Width - 2, 30);
             using (var pen = new Pen(ShareXResources.Theme.BorderColor))
             using (var pen2 = new Pen(ShareXResources.Theme.TextColor))
